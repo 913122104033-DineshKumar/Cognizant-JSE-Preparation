@@ -61,6 +61,29 @@ LEFT JOIN (
 ) as r
 ON e.event_id = r.event_id
 
+--Query 7
+SELECT u.user_id, e.event_id, e.title, f.comments
+FROM Feedback f
+JOIN Users u ON u.user_id = f.user_id
+JOIN Events e ON f.event_id = e.event_id
+WHERE f.rating <= 5;
+
+-- Query 8
+SELECT e.event_id, e.title, s.total_session
+FROM Events e
+JOIN (
+    SELECT event_id, COUNT(*) AS total_session
+    FROM Session
+    GROUP BY event_id
+) s
+ON e.event_id = s.event_id
+WHERE e.status = 'upcoming';
+
+-- Query 9
+SELECT organizer_id, COUNT(event_id) AS number_of_events, status
+FROM Events 
+GROUP BY organizer_id, status; 
+
 -- Query 10
 SELECT * 
 FROM Events
@@ -79,6 +102,19 @@ SELECT registration_date, COUNT(DISTINCT user_id)
 FROM Registration
 WHERE registration_date >= CURDATE() - INTERVAL 7 DAY
 GROUP BY registration_date; 
+
+-- Query 12
+SELECT event_id, COUNT(session_id) AS session_count
+FROM Session
+GROUP BY event_id
+HAVING COUNT(*) = (
+    SELECT MAX(session_count) 
+    FROM (
+        SELECT COUNT(*) AS session_count
+        FROM Session
+        GROUP BY event_id
+    ) AS session_counts
+);
 
 -- Query 14
 SELECT e.event_id, r.user_count
@@ -101,6 +137,22 @@ AND user_id NOT IN (
     FROM Registration
 );
 
+-- Query 19
+SELECT e.event_id, r.total_registrations, f.average_rating
+FROM Events e 
+JOIN (
+    SELECT event_id, COUNT(*) AS total_registrations
+    FROM Registration
+    GROUP BY event_id
+) r
+JOIN (
+    SELECT event_id, AVG(rating) as average_rating
+    FROM Feedback
+    GROUP BY event_id
+) f
+ON e.event_id = r.event_id AND e.event_id = f.event_id
+WHERE e.status = 'completed';
+
 -- Query 21
 SELECT user_id 
 FROM feedback
@@ -114,7 +166,7 @@ FROM Users
 WHERE user_id IN (
     SELECT user_id
     FROM registration
-    GROUP BY user_id
+    GROUP BY user_id, event_id
     HAVING COUNT(user_id) >= 2
 );
 
