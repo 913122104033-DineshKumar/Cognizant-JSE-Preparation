@@ -10,6 +10,7 @@ public class Task1to5 {
         // Task 2 simpleCalculator();
         // Task 3 oddOrEven();
         // Task 4 leapYear();
+        // Task 5 multiplicationTable();
         scanner.close();
     }
 
@@ -51,6 +52,13 @@ public class Task1to5 {
         System.out.println("Enter a year: ");
         int year = scanner.nextInt();
         System.out.println(((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) ? "Leap year" : "Not a leap year");
+    }
+
+    private static void multiplicationTable () {
+        int num = scanner.nextInt();
+        for (int i = 1; i <= 10; i++) {
+            System.out.println(num + " * " + i + " = " + num * i);
+        }
     }
 
 }
