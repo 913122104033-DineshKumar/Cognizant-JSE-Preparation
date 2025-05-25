@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Registration Form</title>
+    <style>
+        form {
+  width: 300px;
+  margin: 50px auto;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input, select, textarea {
+  width: 90%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #aaa;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <main>
+        <form class="main" method="get">
+            <label for="name">Name</label>
+            <br/>
+            <input id="form" type="name" name="name" placeholder="Dinesh" autofocus/>
+            <br/>
+            <label for="email">Email</label>
+            <br/>
+            <input id="form" type="email" name="email" placeholder="you@example.com"/>
+            <br/>
+            <label for="date">Date</label>
+            <br/>
+            <input id="form" type="date" name="date" placeholder="24-05-2025"/>
+            <br/>
+            <label for="event_type">Event Type</label>
+            <br/>
+            <select id="form" name="event_type">
+                <option value="concert">Concert</option>
+                <option value="exhibition">Exhibition</option>
+                <option value="conference">Conference</option>
+            </select>
+            <br/>
+            <label for="message">Message</label>
+            <br/>
+            <textarea id="form" type="message" name="name" rows="5" cols="40"></textarea>
+            <br/>
+            <button type="submit" onclick="showOutput(event)">Submit</button>
+        </form>
+        <output id="output" style="display: none;"></output>
+    </main>
+    <script>
+        function showOutput(event) {
+            event.preventDefault();
+            var output = document.getElementById('output');
+            output.style.display = 'block';
+            output.innerHTML = "Form submitted";
+        }
+    </script>
+</body>
+</html>
