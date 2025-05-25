@@ -116,6 +116,12 @@ HAVING COUNT(*) = (
     ) AS session_counts
 );
 
+-- Query 13
+SELECT e.city, AVG(f.rating) AS average_rating
+FROM Events e 
+JOIN Feedback f ON e.event_id = f.event_id
+GROUP BY e.city; 
+
 -- Query 14
 SELECT e.event_id, r.user_count
 FROM Events e 
@@ -128,6 +134,23 @@ ON e.event_id = r.event_id
 ORDER BY r.user_count DESC
 LIMIT 3;
 
+-- Query 15
+SELECT
+    s1.session_id AS session1_id,
+    s1.start_time AS start_time,
+    s1.end_time AS end_time,
+    s2.session_id AS session2_id,
+    s2.start_time AS start_time,
+    s2.end_time AS end_time
+FROM Session s1
+JOIN Session s2
+ON s1.event_id = s2.event_id
+AND s1.session_id < s2.session_id
+AND (
+    s1.end_time > s2.start_time AND
+    s2.end_time > s1.start_time
+);
+
 -- Query 16
 SELECT user_id, full_name
 FROM Users 
@@ -135,6 +158,20 @@ WHERE registration_date >= CURDATE() - INTERVAL 30 DAY
 AND user_id NOT IN (
     SELECT user_id 
     FROM Registration
+);
+
+-- Query 17
+SELECT speaker_name, COUNT(*)
+FROM Session 
+GROUP BY speaker_name
+HAVING COUNT(session_id) > 1; 
+
+-- Query 18
+SELECT event_id, title
+FROM Events 
+WHERE event_id NOT IN (
+    SELECT event_id
+    FROM Resources
 );
 
 -- Query 19
@@ -153,6 +190,19 @@ JOIN (
 ON e.event_id = r.event_id AND e.event_id = f.event_id
 WHERE e.status = 'completed';
 
+-- Query 20
+SELECT u.user_id, COUNT(DISTINCT r.event_id) As registration_count, COUNT(DISTINCT f.feedback_id) as feedback_count
+FROM Users u 
+LEFT JOIN Registration r ON r.user_id = u.user_id
+LEFT JOIN (
+    SELECT event_id
+    FROM Events
+    WHERE status = 'completed'
+) e
+ON e.event_id = r.evemt_id
+LEFT JOIN Feedback f ON f.user_id = u.user_id
+GROUP BY u.user_id;
+
 -- Query 21
 SELECT user_id 
 FROM feedback
@@ -169,6 +219,19 @@ WHERE user_id IN (
     GROUP BY user_id, event_id
     HAVING COUNT(user_id) >= 2
 );
+
+-- Query 23
+SELECT MONTH(registration_date) AS registration_month, COUNT(*) AS registration_count
+FROM Registration
+WHERE TIMESTAMPDIFF(DAY, registration_date, CURRENT_DATE) <= 365
+GROUP BY MONTH(registration_date)
+ORDER BY MONTH(registration_date);
+
+-- Query 24
+SELECT event_id, AVG(TIMESTAMPDIFF(MINUTE, start_time, end_time)) AS average_minute_difference
+FROM Session s 
+GROUP BY event_id
+ORDER BY event_id;  
 
 -- Query 25
 SELECT event_id
