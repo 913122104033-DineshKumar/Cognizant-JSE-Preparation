@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Changer</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input[name="changefontsize"] {
+            width: 100%;
+            padding: 4px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Font Size Changer</h1>
+        <h2 id="text">This is a changable text</h2>
+        <br/>
+        <input name="changefontsize" placeholder="Enter Font Size in px" autofocus/>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            var input = document.querySelector('input[name=changefontsize]');
+            var text = document.getElementById('text');
+            input.addEventListener("input", () => {
+                text.style.fontSize = input.value + "px";
+            });
+        });
+    </script>
+</body>
+</html>
